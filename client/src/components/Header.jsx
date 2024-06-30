@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -38,7 +38,7 @@ const Header = () => {
           </Link>
 
           <Link to={"/signin"}>
-            <li className="font-semibold text-slate-600 text-1xl">SignIn</li>
+            <li className="font-semibold text-slate-600 text-1xl">Sign in</li>
           </Link>
         </ul>
       </div>

@@ -2,9 +2,13 @@ import express from "express"
 import { mongoose } from "mongoose"
 const app = express()
 const port = process.env.PORT || 3000
+import cors from 'cors'
 // import 'dotenv/config'
 import dotenv from 'dotenv'
 dotenv.config()
+
+app.use(cors())
+app.use(express.json())
 
 
 mongoose.connect(process.env.MONGO_URI).then(() => {
@@ -16,6 +20,8 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
     console.log(err);
 });
 
-app.get('/', (req, res) => {
-  res.send('Hello World!!')
-})
+
+import userRoute from "./routes/userRoute.js"
+import authRoute from "./routes/authRoute.js"
+app.use('/api/v1',userRoute)
+app.use('/api/v1',authRoute)
