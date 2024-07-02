@@ -1,5 +1,6 @@
 import User from "../models/usermodel.js";
 import bcrypt from "bcrypt";
+import jwttoken from "jsonwebtoken"
 
 const auth = async (req, res) => {
     try {
@@ -34,4 +35,49 @@ const auth = async (req, res) => {
     }
 };
 
-export default auth;
+
+const signIn = async (req,res,next) =>{
+    try {
+        const {username,email,password} = req.body;
+
+        if(!(username || email) || !password){
+            return res.status(400).json({"message":"Please enter all details"})
+        }
+
+        const existsUser = await User.findOne({
+            $or: [{ email }, { username }]
+        })
+
+        if (!existsUser) {
+            return res.status(409).json({ "message": "User not found" });
+        }
+
+        const verified = bcrypt.compareSync(password, existsUser.password);
+
+        if(!verified){
+            return res.status(404).json({"message" : "Wrong credentials"})
+        }
+
+        const token = jwttoken.sign({
+            id: existsUser._id
+        }, process.env.SECRET_KEY)
+        
+        // console.log("Allright");
+        // console.log(token);
+        
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        const {password: pass, ...loggedIn} = existsUser._doc
+        // const loggedIn = await User.findById(existsUser._id).select("-password");
+
+        return res.status(200).cookie("access_token", token, options).json(loggedIn)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ "message": "Internal server error!" });
+    }
+}
+
+export {auth, signIn};
