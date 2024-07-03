@@ -1,12 +1,20 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  signInFailure,
+  signInStart,
+  signInSuccess,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState("");
+  const { error, loading} = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -34,23 +42,30 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true)
+    dispatch(signInStart());
     try {
       const res = await axios.post("/api/v1/login", formData);
-      setError(res.data.message);
+      // setError(res.data.message);
+      dispatch(signInSuccess(res.data));
       console.log(res.data);
       navigate("/");
     } catch (error) {
       if (error.response) {
-        setError(error.response.data.message || "An error occurred");
+        // setError(error.response.data.message || "An error occurred");
+        dispatch(
+          signInFailure(error.response.data.message) || "An error occurred"
+        );
         console.log(error.response.data);
       } else {
-        setError("Something went wrong, try later!");
+        // setError("Something went wrong, try later!");
+        dispatch("Something went wrong, try later!");
         console.log("Error:", error.message);
       }
-    } finally {
-      setLoading(false);
     }
+    // finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
