@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Oauth from "../components/Oauth";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
@@ -78,9 +79,7 @@ const SignUp = () => {
         >
           {loading ? "Loading..." : "SIGN UP"}
         </button>
-        <button className="bg-red-600 rounded-md px-3 py-1.5 border-0 text-[.7rem] hover:bg-red-500 active:translate-y-px">
-          CONTINUE WITH GOOGLE
-        </button>
+        <Oauth/>
 
         <p className="text-[.7rem] pl-1">
           Have an account?{"  "}

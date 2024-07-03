@@ -7,6 +7,7 @@ import {
   signInStart,
   signInSuccess,
 } from "../redux/user/userSlice";
+import Oauth from "../components/Oauth";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
@@ -95,12 +96,9 @@ const SignIn = () => {
         >
           {loading ? "Loading..." : "SIGN IN"}
         </button>
-        <button className="bg-red-600 rounded-md px-3 py-1.5 border-0 text-[.7rem] hover:bg-red-500 active:translate-y-px">
-          CONTINUE WITH GOOGLE
-        </button>
-
+        <Oauth/>
         <p className="text-[.7rem] pl-1">
-          Create new account{"  "}
+          Dont have an account?{"  "}
           <span className="text-blue-700">
             <Link to={"/signup"}>click here</Link>
           </span>

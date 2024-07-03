@@ -20,14 +20,22 @@ const auth = async (req, res) => {
 
         const hashedPassword = bcrypt.hashSync(password, 10);
 
-        await User.create({
+        const newUser = await User.create({
             username,
             name,
             password: hashedPassword,
-            email
+            email,
+            avatar
         });
+        const {password: pass, ...rest} = newUser._doc;
+        const token = jwttoken.sign({id: newUser._id},process.env.SECRET_KEY)
 
-        return res.status(201).json({ "message": "Registered successfully" });
+        const options= {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res.status(200).cookie('access_token_auth', token, options).json(rest);
 
     } catch (error) {
         console.error(error);
@@ -78,6 +86,52 @@ const signIn = async (req,res,next) =>{
         console.error(error);
         return res.status(500).json({ "message": "Internal server error!" });
     }
+};
+
+const googleAuth = async (req, res) => {
+    try {
+        // const {email} = req.body.email;
+
+        const user = await User.findOne({email:req.body.email});
+        console.log(user);
+        if(!user){
+            const password = Math.random().toString(10);
+            const hashedPassword = bcrypt.hashSync(password,10);
+            const newUser = await User.create({
+                name: req.body.name,
+                username: req.body.email,
+                email: req.body.email,
+                password: hashedPassword,
+                avatar: req.body.avatar
+            })
+
+            const {password: pass, ...rest} = newUser._doc;
+            const token = jwttoken.sign({id: newUser._id},process.env.SECRET_KEY)
+
+            const options= {
+                httpOnly: true,
+                secure: true
+            }
+
+            return res.status(200).cookie('access_token_google', token, options).json(rest);
+        }
+        
+        const token = jwttoken.sign({
+            id: user._id
+        }, process.env.SECRET_KEY)
+
+        const {password: pass, ...rest} = user._doc;
+
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
+
+        return res.cookie("access_token", token, options).status(200).json(rest);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ "message": "Internal server error!" });
+    }
 }
 
-export {auth, signIn};
+export {auth, signIn, googleAuth};
