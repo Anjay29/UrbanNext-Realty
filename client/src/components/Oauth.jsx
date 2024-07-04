@@ -25,7 +25,7 @@ const Oauth = () => {
 
       const res = await axios.post("/api/v1/auth/google", data);
     //   console.log(res);
-      dispatch(signInSuccess(res))
+      dispatch(signInSuccess(res.data))
       navigate('/')
     } catch (error) {
       console.log("Something went wrong", error.message);

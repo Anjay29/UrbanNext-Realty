@@ -49,7 +49,7 @@ const SignIn = () => {
       const res = await axios.post("/api/v1/login", formData);
       // setError(res.data.message);
       dispatch(signInSuccess(res.data));
-      console.log(res.data);
+      // console.log(res.data);
       navigate("/");
     } catch (error) {
       if (error.response) {
