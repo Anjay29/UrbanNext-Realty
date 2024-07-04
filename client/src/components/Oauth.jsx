@@ -12,8 +12,8 @@ const Oauth = () => {
   const oauthHandler = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      const Auth = getAuth(app);
-      const result = await signInWithPopup(Auth, provider);
+      const auth = getAuth(app);
+      const result = await signInWithPopup(auth, provider);
     //   console.log(result.user);
     //   console.log(result);
 
