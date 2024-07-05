@@ -1,8 +1,35 @@
-const userController = (req, res) => {
-    return res.status(200).json({
-      "message": "All good!"
-    });
-  };
+import bcrypt from "bcrypt";
+import User from "../models/usermodel.js";
+
+const updateUser = async (req, res) => {
+    if(req.user.id !== req.params.id){
+      return res.status(404).json({"message" : "You are only able to make change in your account"})
+    }
+
+    try {
+      if(req.body.password){
+        req.body.password = bcrypt.hashSync(req.body.password,10);
+      }
+
+      const updateuser = await User.findByIdAndUpdate(req.params.id, {
+        $set:{
+          email: req.body.email,
+          password: req.body.password,
+          username: req.body.username,
+          name: req.body.name,
+          avatar: req.body.avatar
+        }
+      },{new: true})
+
+
+      const {password, ...rest} = updateuser._doc;
+
+      return res.status(200).json(rest)
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({"message" : error.message})
+    }
+};
   
-  export default userController;
+  export {updateUser};
   
