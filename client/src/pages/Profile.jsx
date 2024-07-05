@@ -82,6 +82,13 @@ const Profile = () => {
 
         <input
           type="text"
+          id="name"
+          placeholder="Name"
+          className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
+        />
+
+        <input
+          type="text"
           id="username"
           placeholder="Username"
           className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
