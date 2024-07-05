@@ -7,14 +7,24 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase.js";
+import axios from "axios";
+import {
+  updateUserStart,
+  updateUserFailure,
+  updateUserSuccess,
+} from "../redux/user/userSlice.js";
+import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const fileRef = useRef(null);
-  const { currentUser, loading } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState("");
+  const dispatch = useDispatch();
+
   // console.log(formData);
   useEffect(() => {
     if (file) {
@@ -47,11 +57,45 @@ const Profile = () => {
     );
   };
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    dispatch(updateUserStart());
+    try {
+      const res = await axios.post(
+        `/api/v1/update/${currentUser._id}`,
+        formData
+      );
+      // console.log(res.data);
+      dispatch(updateUserSuccess(res.data));
+      setUpdateSuccess("User updated successfully!")
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          updateUserFailure(error.response.data.message || "An error occurred")
+        );
+        console.log(error.response.data);
+      } else {
+        dispatch(updateUserFailure("Something went wrong, try later!"));
+        console.log("Error:", error.message);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center items-center pt-8 space-y-3">
       <h1 className="text-xl sm:text-2xl font-semibold">Profile</h1>
 
-      <form className="flex flex-col space-y-2 w-[14rem] sm:w-[20rem]">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col space-y-2 w-[14rem] sm:w-[20rem]"
+      >
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -74,7 +118,7 @@ const Profile = () => {
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
           ) : filePerc === 100 ? (
-            <span className="text-green-700">Image successfully uploaded!</span>
+            <span className="text-green-700">Image successfully uploaded! Click Update</span>
           ) : (
             ""
           )}
@@ -83,22 +127,28 @@ const Profile = () => {
         <input
           type="text"
           id="name"
+          defaultValue={currentUser.name}
           placeholder="Name"
           className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
+          onChange={handleChange}
         />
 
         <input
           type="text"
           id="username"
+          defaultValue={currentUser.username}
           placeholder="Username"
           className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
+          onChange={handleChange}
         />
 
         <input
           type="text"
           id="email"
+          defaultValue={currentUser.email}
           placeholder="Email"
           className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
+          onChange={handleChange}
         />
 
         <input
@@ -106,6 +156,7 @@ const Profile = () => {
           id="password"
           placeholder="Password"
           className="rounded-md px-2 py-1 border-0 text-[.8rem] focus:outline-none"
+          onChange={handleChange}
         />
         <button
           disabled={loading}
@@ -119,7 +170,7 @@ const Profile = () => {
           className="bg-red-600 text-white rounded-md px-3 py-1 border-0 text-[.8rem] hover:bg-red-500 active:translate-y-px"
           // onClick={handleSubmit}
         >
-          {loading ? "Loading..." : "CREATE LISTING"}
+          CREATE LISTING
         </button>
       </form>
 
@@ -131,6 +182,8 @@ const Profile = () => {
           Sign Out
         </span>
       </div>
+      {error && <p className="text-red-500">{error}</p>}
+      {updateSuccess && <p className="text-green-500">{updateSuccess}</p>}
     </div>
   );
 };
