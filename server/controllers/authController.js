@@ -4,7 +4,7 @@ import jwttoken from "jsonwebtoken"
 
 const auth = async (req, res) => {
     try {
-        const { username, name, password, email } = req.body;
+        const { username, name, password, email, avatar } = req.body;
 
         if (!name || !password || !email || !username) {
             return res.status(400).json({ "message": "All parameters are required" });
@@ -19,7 +19,7 @@ const auth = async (req, res) => {
         }
 
         const hashedPassword = bcrypt.hashSync(password, 10);
-
+        
         const newUser = await User.create({
             username,
             name,

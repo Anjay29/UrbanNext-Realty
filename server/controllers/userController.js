@@ -30,6 +30,15 @@ const updateUser = async (req, res) => {
       return res.status(400).json({"message" : error.message})
     }
 };
+
+const deleteUser = async (req,res) => {
+  if(req.user.id !== req.params.id){
+    return res.status(404).json({"message" : "You are not authroized to delete this account."})
+  }
+
+  await User.findByIdAndDelete(req.params.id);
+  return res.status(200).clearCookie('access_token').json({"message": "Account deleted"});
+}
   
-  export {updateUser};
+export {updateUser, deleteUser};
   

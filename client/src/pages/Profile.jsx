@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -12,6 +13,9 @@ import {
   updateUserStart,
   updateUserFailure,
   updateUserSuccess,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice.js";
 import { useDispatch } from "react-redux";
 
@@ -24,6 +28,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // console.log(formData);
   useEffect(() => {
@@ -74,7 +79,7 @@ const Profile = () => {
       );
       // console.log(res.data);
       dispatch(updateUserSuccess(res.data));
-      setUpdateSuccess("User updated successfully!")
+      setUpdateSuccess("User updated successfully!");
     } catch (error) {
       if (error.response) {
         dispatch(
@@ -83,6 +88,25 @@ const Profile = () => {
         console.log(error.response.data);
       } else {
         dispatch(updateUserFailure("Something went wrong, try later!"));
+        console.log("Error:", error.message);
+      }
+    }
+  };
+
+  const deleteUser = async () => {
+    dispatch(deleteUserStart());
+    try {
+      await axios.delete(`/api/v1/delete/${currentUser._id}`);
+      dispatch(deleteUserSuccess());
+      navigate("/signin");
+    } catch (error) {
+      if (error.response) {
+        dispatch(
+          deleteUserFailure(error.response.data.message || "An error occurred")
+        );
+        console.log(error.response.data);
+      } else {
+        dispatch(deleteUserFailure("Something went wrong, try later!"));
         console.log("Error:", error.message);
       }
     }
@@ -118,7 +142,9 @@ const Profile = () => {
           ) : filePerc > 0 && filePerc < 100 ? (
             <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
           ) : filePerc === 100 ? (
-            <span className="text-green-700">Image successfully uploaded! Click Update</span>
+            <span className="text-green-700">
+              Image successfully uploaded! Click Update
+            </span>
           ) : (
             ""
           )}
@@ -175,7 +201,10 @@ const Profile = () => {
       </form>
 
       <div className="flex justify-between w-[14rem] sm:w-[20rem] px-2">
-        <span className="text-red-600 cursor-pointer text-[0.9rem]">
+        <span
+          className="text-red-600 cursor-pointer text-[0.9rem]"
+          onClick={deleteUser}
+        >
           Delete account
         </span>
         <span className="text-red-600 cursor-pointer text-[0.9rem]">
