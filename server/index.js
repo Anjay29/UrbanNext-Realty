@@ -24,5 +24,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 
 import userRoute from "./routes/userRoute.js"
 import authRoute from "./routes/authRoute.js"
+import listingRoute from "./routes/listingRoute.js"
 app.use('/api/v1',userRoute)
 app.use('/api/v1',authRoute)
+app.use('/api/v1/', listingRoute)
