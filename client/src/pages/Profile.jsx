@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
@@ -16,8 +16,10 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOutUserFailure,
+  signOutUserStart,
+  signOutUserSuccess,
 } from "../redux/user/userSlice.js";
-import { useDispatch } from "react-redux";
 
 const Profile = () => {
   const fileRef = useRef(null);
@@ -109,6 +111,17 @@ const Profile = () => {
         dispatch(deleteUserFailure("Something went wrong, try later!"));
         console.log("Error:", error.message);
       }
+    }
+  };
+
+  const handleSignout = async () => {
+    dispatch(signOutUserStart());
+    try {
+      await axios.get("/api/v1/signout");
+      dispatch(signOutUserSuccess());
+    } catch (error) {
+      console.log(error.message);
+      dispatch(signOutUserFailure(error.message));
     }
   };
 
@@ -207,7 +220,10 @@ const Profile = () => {
         >
           Delete account
         </span>
-        <span className="text-red-600 cursor-pointer text-[0.9rem]">
+        <span
+          className="text-red-600 cursor-pointer text-[0.9rem]"
+          onClick={handleSignout}
+        >
           Sign Out
         </span>
       </div>

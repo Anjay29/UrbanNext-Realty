@@ -19,7 +19,7 @@ const auth = async (req, res) => {
         }
 
         const hashedPassword = bcrypt.hashSync(password, 10);
-        
+
         const newUser = await User.create({
             username,
             name,
@@ -134,4 +134,12 @@ const googleAuth = async (req, res) => {
     }
 }
 
-export {auth, signIn, googleAuth};
+const signOut = async (req,res) => {
+    try {
+        return res.status(200).clearCookie("access_token").json({"message": "SignOut successfully"});
+    } catch (error) {
+        return res.status(501).json({"message" : "Internal server error"})
+    }
+}
+
+export {auth, signIn, googleAuth, signOut};
