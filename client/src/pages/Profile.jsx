@@ -31,8 +31,11 @@ const Profile = () => {
   const [updateSuccess, setUpdateSuccess] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showListingsError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   // console.log(formData);
+  // console.log(userListings?.length);
   useEffect(() => {
     if (file) {
       handleFileUpload(file);
@@ -125,13 +128,34 @@ const Profile = () => {
     }
   };
 
+  const handleShowListings = async () => {
+    try {
+      const res = await axios.get(`/api/v1//listings/${currentUser._id}`);
+      setUserListings(res.data);
+      setShowListingError(false);
+    } catch (error) {
+      setShowListingError(true);
+    }
+  };
+
+  const handleListingDelete = async (listingId) => {
+    try {
+      await axios.delete(`/api/v1/delete-listing/${listingId}`)
+      setUserListings((prev) =>
+        prev.filter((listing) => listing._id !== listingId)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <div className="flex flex-col justify-center items-center pt-8 space-y-3">
+    <div className="flex flex-col justify-center items-center pt-8 space-y-3 mb-5">
       <h1 className="text-xl sm:text-2xl font-semibold">Profile</h1>
 
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col space-y-2 w-[14rem] sm:w-[20rem]"
+        className="flex flex-col space-y-2 w-[14rem] sm:w-[24rem]"
       >
         <input
           onChange={(e) => setFile(e.target.files[0])}
@@ -204,12 +228,15 @@ const Profile = () => {
           {loading ? "Loading..." : "UPDATE"}
         </button>
 
-        <Link className="bg-green-800 text-white rounded-md justify-center text-center py-1 border-0 text-[.8rem] hover:bg-green-700 active:translate-y-px" to={"/create-listing"}>
+        <Link
+          className="bg-green-800 text-white rounded-md justify-center text-center py-1 border-0 text-[.8rem] hover:bg-green-700 active:translate-y-px"
+          to={"/create-listing"}
+        >
           CREATE LISTING
         </Link>
       </form>
 
-      <div className="flex justify-between w-[14rem] sm:w-[20rem] px-2">
+      <div className="flex justify-between w-[14rem] sm:w-[24rem] px-2">
         <span
           className="text-red-600 cursor-pointer text-[0.9rem]"
           onClick={deleteUser}
@@ -225,6 +252,52 @@ const Profile = () => {
       </div>
       {error && <p className="text-red-500">{error}</p>}
       {updateSuccess && <p className="text-green-500">{updateSuccess}</p>}
+
+      <button onClick={handleShowListings} className="text-green-500 w-full">
+        Show Listing
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingsError ? "Error showing listings" : ""}
+      </p>
+      {userListings?.length > 0 && (
+        <div className="flex flex-col">
+          <h1 className="text-center mt-4 text-2xl font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-2 flex justify-between items-center gap-4 w-[14rem] sm:w-[24rem]"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt="listing cover"
+                  className="h-20 w-20 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold  hover:underline truncate flex-1"
+                to={`/listing/${listing._id}`}
+              >
+                <p className="overflow-hidden text-ellipsis">{listing.name}</p>
+              </Link>
+
+              <div className="flex flex-col item-center">
+                <button
+                  onClick={() => handleListingDelete(listing._id)}
+                  className="text-red-700 uppercase"
+                >
+                  Delete
+                </button>
+                <Link to={`/update-listing/${listing._id}`}>
+                  <button className="text-green-700 uppercase">Edit</button>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -55,5 +55,18 @@ const getListings = async (req,res) => {
   }
 }
 
-export {updateUser, deleteUser, getListings};
+const getListing = async (req,res) => {
+  try {
+    const  listing = await Listing.findById(req.params.id);
+    if(!listing){
+      return res.status(404).json({"message" : "Problem in getting list"})
+    }
+
+    return res.status(200).json(listing);
+  } catch (error) {
+    return res.status(500).json({"message" : "Something went wrong"})
+  }
+}
+
+export {updateUser, deleteUser, getListings, getListing};
   
