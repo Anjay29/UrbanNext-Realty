@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
@@ -204,13 +204,9 @@ const Profile = () => {
           {loading ? "Loading..." : "UPDATE"}
         </button>
 
-        <button
-          disabled={loading}
-          className="bg-red-600 text-white rounded-md px-3 py-1 border-0 text-[.8rem] hover:bg-red-500 active:translate-y-px"
-          // onClick={handleSubmit}
-        >
+        <Link className="bg-green-800 text-white rounded-md justify-center text-center py-1 border-0 text-[.8rem] hover:bg-green-700 active:translate-y-px" to={"/create-listing"}>
           CREATE LISTING
-        </button>
+        </Link>
       </form>
 
       <div className="flex justify-between w-[14rem] sm:w-[20rem] px-2">

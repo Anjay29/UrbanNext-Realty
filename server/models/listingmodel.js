@@ -11,6 +11,11 @@ const listingSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    address: {
+        type: String,
+        required: true,
+        trim: true
+    },
     regularPrice: {
         type: Number,
         required: true
@@ -28,6 +33,10 @@ const listingSchema = new mongoose.Schema({
         required: true
     },
     furnished: {
+        type: Boolean,
+        required: true
+    },
+    offer: {
         type: Boolean,
         required: true
     },
