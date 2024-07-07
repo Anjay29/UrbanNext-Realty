@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/usermodel.js";
+import Listing from "../models/listingmodel.js";
 
 const updateUser = async (req, res) => {
     if(req.user.id !== req.params.id){
@@ -40,5 +41,19 @@ const deleteUser = async (req,res) => {
   return res.status(200).clearCookie('access_token').json({"message": "Account deleted"});
 }
   
-export {updateUser, deleteUser};
+const getListings = async (req,res) => {
+  try {
+    if(req.params.id === req.user.id){
+      const listings = await Listing.find({useRef : req.params.id});
+      return res.status(200).json(listings);
+    }
+    else{
+      return res.status(404).json({"message":"you are not authorised user"});
+    }
+  } catch (error) {
+    return res.status(500).json({"message" : "Something went wrong geting Listings"})
+  }
+}
+
+export {updateUser, deleteUser, getListings};
   

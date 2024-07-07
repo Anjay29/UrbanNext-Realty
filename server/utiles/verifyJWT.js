@@ -7,13 +7,14 @@ const verifyJWT = (req,res, next) => {
     return res.status(404).json({"message" : "Unauthorized"});
   }
 
-  const verified = jwttoken.verify(token,process.env.SECRET_KEY, (error, user) => {
+  jwttoken.verify(token,process.env.SECRET_KEY, (error, user) => {
     if(error){
       return res.status(403).json({"message" : "Forbidden"})
     }
 
     req.user = user
-    // console.log(user);
+    console.log(user);
+    console.log("yha");
     next();
   })
 
