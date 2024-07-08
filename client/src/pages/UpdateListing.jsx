@@ -150,7 +150,7 @@ const UpdateListing = () => {
       // console.log(res.data.message);
       setError(res.data.message);
       setLoading(false);
-      navigate(`/listing/${currentUser._id}`);
+      navigate(`/listing/${id}`);
     } catch (error) {
       console.log(error);
       setError(error);

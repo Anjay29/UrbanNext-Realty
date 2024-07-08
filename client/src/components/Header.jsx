@@ -46,7 +46,7 @@ const Header = () => {
               <img
                 src={currentUser.avatar}
                 alt="Profile pic"
-                className="h-9 w-9 rounded-full "
+                className="h-7 w-7 sm:h-10 sm:w-10 rounded-full "
               />
             ) : (
               <li className="font-semibold text-slate-600 text-1xl">Sign in</li>

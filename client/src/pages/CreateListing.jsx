@@ -131,10 +131,10 @@ const CreateListing = () => {
 
       setLoading(true);
       const res = await axios.post("/api/v1/listing/create", formData);
-      // console.log(res.data.message);
+      // console.log(res);
       setError(res.data.message);
       setLoading(false);
-      navigate(`/listing/${currentUser._id}`)
+      navigate(`/listing/${res.data._id}`);
     } catch (error) {
       console.log(error);
       setError(error);
