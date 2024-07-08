@@ -68,5 +68,20 @@ const getListing = async (req,res) => {
   }
 }
 
-export {updateUser, deleteUser, getListings, getListing};
+const getUser = async (req,res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if(!user){
+      return res.status(404).json({"message":"User node found"})
+    }
+
+    const {password : pass, ...rest} = user._doc
+    return res.status(200).json(rest);
+  } catch (error) {
+    return res.status(500).json({"message" : "Something went wrong during fetching the user"});
+  }
+}
+
+export {updateUser, deleteUser, getListings, getListing, getUser};
   
