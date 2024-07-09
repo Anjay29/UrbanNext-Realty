@@ -1,11 +1,31 @@
 // import React from "react";
 import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 
 const Header = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
   // console.log(currentUser);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("searchTerm", searchTerm);
+    const searchQuery = urlParams.toString();
+    navigate(`/search?${searchQuery}`);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if(searchTermFromUrl){
+      setSearchTerm(searchTermFromUrl)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   return (
     <header className="bg-slate-400">
@@ -17,11 +37,16 @@ const Header = () => {
           </h1>
         </Link>
 
-        <form className="bg-slate-300 flex justify-between rounded-xl md:w-72 p-2">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-slate-300 flex justify-between rounded-xl md:w-72 p-2"
+        >
           <input
             type="text"
             placeholder="Search..."
             className=" focus:outline-none sm:w-64 bg-transparent mr-2"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button>
             <FaSearch className="text-slate-600 text-1xl sm:text-2xl" />

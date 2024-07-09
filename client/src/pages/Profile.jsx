@@ -140,14 +140,14 @@ const Profile = () => {
 
   const handleListingDelete = async (listingId) => {
     try {
-      await axios.delete(`/api/v1/delete-listing/${listingId}`)
+      await axios.delete(`/api/v1/delete-listing/${listingId}`);
       setUserListings((prev) =>
         prev.filter((listing) => listing._id !== listingId)
       );
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col justify-center items-center pt-8 space-y-3 mb-5">
