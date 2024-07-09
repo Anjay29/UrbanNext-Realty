@@ -19,7 +19,7 @@ const Search = () => {
   const [showMore, setShowMore] = useState(false);
 
   // console.log(sidebardata);
-  console.log(listings);
+  // console.log(listings);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -127,6 +127,25 @@ const Search = () => {
     const searchQuery = urlParams.toString();
     // console.log(searchQuery);
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    try {
+      const numberOfListing = listings.length;
+      const startIndex = numberOfListing;
+      const urlParams = new URLSearchParams(location.search);
+      urlParams.set("startIndex", startIndex);
+      const searchQuery = urlParams.toString();
+      const res = await axios.get(`/api/v1/get?${searchQuery}`);
+
+      if (res.data.length < 9) {
+        setShowMore(false);
+      }
+
+      setListings([...listings, ...res.data]);
+    } catch (error) {
+      console.log(console.error);
+    }
   };
 
   return (
@@ -256,7 +275,7 @@ const Search = () => {
 
           {showMore && (
             <button
-              //   onClick={onShowMoreClick}
+              onClick={onShowMoreClick}
               className="text-green-700 hover:underline p-7 text-center w-full"
             >
               Show more
