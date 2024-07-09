@@ -21,8 +21,8 @@ const Header = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
-    if(searchTermFromUrl){
-      setSearchTerm(searchTermFromUrl)
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
@@ -33,7 +33,9 @@ const Header = () => {
         <Link to={"/"}>
           <h1>
             <span className="text-xl sm:text-3xl text-slate-600">ark</span>
-            <span className="text-xl sm:text-3xl text-slate-600">Estate</span>
+            <span className="text-xl sm:text-3xl text-slate-600 font-semibold">
+              Estate
+            </span>
           </h1>
         </Link>
 
