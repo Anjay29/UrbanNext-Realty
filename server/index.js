@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000
 dotenv.config()
 
 // CORS configuration
+console.log('Before CORS configuration');
 const corsOptions = {
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -23,6 +24,11 @@ console.log('After CORS configuration');
 // Other middleware
 app.use(express.json())
 app.use(cookieParser())
+
+app.get('/test-cors', (req, res) => {
+    console.log('Test CORS route accessed');
+    res.json({ message: 'CORS is working' });
+  });
 
 // Your routes
 import userRoute from "./routes/userRoute.js"
