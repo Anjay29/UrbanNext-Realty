@@ -11,13 +11,14 @@ dotenv.config()
 
 // CORS configuration
 const corsOptions = {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
-
+console.log('CORS options:', corsOptions);
 app.use(cors(corsOptions));
+console.log('After CORS configuration');
 
 // Other middleware
 app.use(express.json())
