@@ -12,13 +12,13 @@ dotenv.config()
 app.use(express.json())
 app.use(cookieParser())
 
-// app.use(cors())
-app.use(cors({
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-  }));
+app.use(cors())
+// app.use(cors({
+//     origin: 'http://localhost:5173',
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+//     credentials: true,
+//     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+//   }));
 
 // const corsOptions ={
 //     origin:'http://localhost:5173', 
