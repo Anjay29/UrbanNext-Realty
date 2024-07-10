@@ -1,11 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   signInFailure,
   signInStart,
   signInSuccess,
+  refreshPage
 } from "../redux/user/userSlice";
 import Oauth from "../components/Oauth";
 
@@ -16,6 +17,10 @@ const SignIn = () => {
   const { error, loading} = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(refreshPage())
+  },[])
 
   const handleChange = (e) => {
     const { id, value } = e.target;

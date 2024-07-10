@@ -19,6 +19,7 @@ import {
   signOutUserFailure,
   signOutUserStart,
   signOutUserSuccess,
+  refreshPage
 } from "../redux/user/userSlice.js";
 
 const Profile = () => {
@@ -40,6 +41,7 @@ const Profile = () => {
     if (file) {
       handleFileUpload(file);
     }
+    dispatch(refreshPage())
   }, [file]);
 
   const handleFileUpload = (file) => {
@@ -90,7 +92,7 @@ const Profile = () => {
         dispatch(
           updateUserFailure(error.response.data.message || "An error occurred")
         );
-        console.log(error.response.data);
+        // console.log(error.response.data);
       } else {
         dispatch(updateUserFailure("Something went wrong, try later!"));
         console.log("Error:", error.message);
