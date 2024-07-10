@@ -4,6 +4,7 @@ const app = express()
 const port = process.env.PORT || 3000
 import cookieParser from "cookie-parser"
 import cors from 'cors'
+
 // import 'dotenv/config'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -16,7 +17,6 @@ dotenv.config()
 //     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 //   }));
 
-const cors = require('cors');
 const corsOptions ={
     origin:'http://localhost:5173', 
     credentials:true,            
